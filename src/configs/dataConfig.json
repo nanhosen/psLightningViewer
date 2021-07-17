@@ -1,0 +1,5 @@
+{
+  "DataConfig": {
+    "FieldOrder": ["ID", "time", "type", "fuelModel", "ercValue", "scaledRank", "scaledRankPercentage", "latitude", "longitude", "stnName"]
+  }
+}
