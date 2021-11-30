@@ -1,6 +1,7 @@
 import {LoadDataModalFactory, withState, ModalTabsFactory} from 'kepler.gl/components';
 import styled from 'styled-components';
-import { getLatestData, getRedshiftDataMonthly, getRedshiftDataFireSeason, selectedData } from '../../actions'
+// import { getLatestData, getRedshiftDataMonthly, getRedshiftDataFireSeason, selectedData } from '../../actions'
+import { setSelectedHours, getLtngDataSelectedHr } from '../../actions'
 import { useDispatch,  useSelector } from 'react-redux' //delete this when do action the right way
 import React, { useEffect, useState } from "react";
 import LoadingStatus from '../LoadingStatus'
@@ -26,31 +27,32 @@ function ImageBlock({sample, onClick}){
    )
 }
 
-const AllBlocks = ({modelInfoArray}) =>{
-  const [model, setModel] = useState()
-  // console.log('in all blocks', modelInfoArray)
+const AllBlocks = ({hoursInfoArray}) =>{
+  const [hours, setHours] = useState()
+  // console.log('in all blocks', hoursInfoArray)
   const dispatch = useDispatch()
   useEffect(() => {
-    // console.log('selectedmodel', model)
-    localStorage.setItem('model' ,model)
-    dispatch(getRedshiftDataFireSeason(model))
-    dispatch(selectedData({model}))
-  },[model])
-  // async function onClickAction(model){
-  //   console.log('clicked model selecected', model)
-  //   await dispatch(getRedshiftDataFireSeason(model))
-  //   await dispatch(selectedData({model}))
+    console.log('selectedhours', hours)
+    // localStorage.setItem('hours' ,hours)
+    // dispatch(getRedshiftDataFireSeason(hours))
+    dispatch(setSelectedHours(hours))
+    dispatch(getLtngDataSelectedHr(hours))
+  },[hours])
+  // async function onClickAction(hours){
+  //   console.log('clicked hours selecected', hours)
+  //   await dispatch(getRedshiftDataFireSeason(hours))
+  //   await dispatch(selectedData({hours}))
   // }
   return (
     <div>
       {
-        modelInfoArray ? (
+        hoursInfoArray ? (
           <StyledSampleGallery className="sample-map-gallery">
-            {modelInfoArray.map((sample,i) => 
+            {hoursInfoArray.map((sample,i) => 
               <ImageBlock 
                 sample = {sample} 
                 key = {i} 
-                onClick={() => setModel(sample.model)}
+                onClick={() => setHours(sample.hours)}
               />
             )}
           </StyledSampleGallery>   
@@ -73,86 +75,86 @@ function NumberList(props) {
 const numbers = [1, 2, 3, 4, 5];
 
 
-const modelInfoArray = [
+const hoursInfoArray = [
   
   {
     // imageUrl:'https://www.gannett-cdn.com/media/2019/05/20/USATODAY/usatsports/Turtle-Marriott-PV.jpg?width=2560',
     imageUrl: 'https://s3.amazonaws.com/uber-static/kepler.gl/sample/sftrees.png',
-    label: 'Fuel Model V',
+    label: '12 Hours',
     message: '',
     id: 1,
-    model: 'V'
+    hours: 12
   },
   {
     // imageUrl:'https://lh3.googleusercontent.com/WEVaxizETKCHMPxtHT1nQLzclTpvUU_Ape7n8UeBOFulvIxMHSrb7wLQNVmRT8RVipUgqcjLGlAW3gaDQmyj=s600-c',
     imageUrl:'https://s3.amazonaws.com/uber-static/kepler.gl/sample/movement-pittsburgh.png',
-    label: 'Fuel Model W',
+    label: '24 Hours',
     message: '',
     id:2,
-    model: 'W'
+    hours: 24
   },
   {
     // imageUrl:'https://cms.qz.com/wp-content/uploads/2019/08/star-turtle-e1565615666276.jpg?quality=75&strip=all&w=1200&h=900&crop=1',
     imageUrl: 'https://s3.amazonaws.com/uber-static/kepler.gl/sample/ukcommute.png',
-    label: 'Fuel Model X',
+    label: '48 Hours',
     // message: 'x!!!',
     message: '',
     id: 3,
-    model: 'X'
+    hours: 48
   },
   {
     // imageUrl:'https://www.hakaimagazine.com/wp-content/uploads/aabr_thumb-1.jpg',
     imageUrl: 'https://s3.amazonaws.com/uber-static/kepler.gl/sample/nyctrips.png',
-    label: 'Fuel Model Y',
+    label: '72 Hours',
     // message: 'hyyyyy?',
     message: '',
     id: 4,
-    model: 'Y'
+    hours: 72
   },
  
   {
     // imageUrl:'https://www.gannett-cdn.com/media/2019/05/20/USATODAY/usatsports/Turtle-Marriott-PV.jpg?width=2560',
     imageUrl:'https://s3.amazonaws.com/uber-static/kepler.gl/sample/sfcontour.png',
-    label: 'Fuel Model Z',
+    label: '96 Hours',
     message: '',
     id:2,
-    model: 'Z'
+    hours: 96
   }
 ]
 
-// const DummyComp = () => ( <AllBlocks modelInfoArray={modelInfoArray} />);
+// const DummyComp = () => ( <AllBlocks hoursInfoArray={hoursInfoArray} />);
 const DummyComp = () => {
   const appState = useSelector(state => state)
-  const [model, setModel] = useState()
+  const [hours, setHours] = useState()
   const [loadingError, setLoadingError] = useState()
-  useEffect(() =>{
-    // console.log('is this the model?', appState.selectedData.selected, !appState.selectedData.selected.model)
-    if(appState.selectedData.selected && appState.selectedData.selected.model){
-    // console.log('this the model?', appState.selectedData.selected.model)
-      setModel(appState.selectedData.selected.model)
-    }
-    else(
-      setModel(null)
-      // console.log('there isno model here', appState.selectedData.selected, !appState.selectedData.selected.model)
-    )
-  },[appState.selectedData.selected])
-  useEffect(() => {
-    if (appState.redshiftData.error && appState.redshiftData.error !== 'no model'){
-      setLoadingError(appState.redshiftData.error)
-    }
-    console.log('DummyComp state error', appState.redshiftData.error)
-  },[appState.redshiftData.error])
+  // useEffect(() =>{
+  //   // console.log('is this the hours?', appState.selectedData.selected, !appState.selectedData.selected.hours)
+  //   if(appState.selectedData.selected && appState.selectedData.selected.hours){
+  //   // console.log('this the hours?', appState.selectedData.selected.hours)
+  //     setHours(appState.selectedData.selected.hours)
+  //   }
+  //   else(
+  //     setHours(null)
+  //     // console.log('there isno hours here', appState.selectedData.selected, !appState.selectedData.selected.hours)
+  //   )
+  // },[appState.selectedData.selected])
+  // useEffect(() => {
+  //   if (appState.redshiftData.error && appState.redshiftData.error !== 'no hours'){
+  //     setLoadingError(appState.redshiftData.error)
+  //   }
+  //   console.log('DummyComp state error', appState.redshiftData.error)
+  // },[appState.redshiftData.error])
 
-  useEffect(()=>{
-    console.log('loading error', loadingError)
-  },[loadingError])
+  // useEffect(()=>{
+  //   console.log('loading error', loadingError)
+  // },[loadingError])
   return( 
     <>
-      {model && !loadingError
+      {hours && !loadingError
         ? <LoadingStatus />
-        : model && loadingError
+        : hours && loadingError
           ? JSON.stringify(loadingError)
-          : <AllBlocks modelInfoArray={modelInfoArray} />
+          : <AllBlocks hoursInfoArray={hoursInfoArray} />
       }
     </>
   )
@@ -164,7 +166,7 @@ const DummyComp = () => {
 const TryThisFirst = (ModalTabs) => {
   const ReturnComp = () => (
     <>
-      <AllBlocks modelInfoArray={modelInfoArray} />
+      <AllBlocks hoursInfoArray={hoursInfoArray} />
     </>  
   );
   return ReturnComp;
@@ -243,14 +245,14 @@ const StyledError = styled.div`
   margin-bottom: 16px;
 `;
 
-        // if(modelInfoArray){
+        // if(hoursInfoArray){
 
         // }
         // else{
 
         // }
-        // modelInfoArray ? 
-        //   for(const property in modelInfoArray){
-        //     <ImageBlock sample = {modelInfoArray[property]} />
+        // hoursInfoArray ? 
+        //   for(const property in hoursInfoArray){
+        //     <ImageBlock sample = {hoursInfoArray[property]} />
         //   }
         //  :'no info'

@@ -1,11 +1,11 @@
 function lightningDataReducer(state = { }, action) {
   // console.log('action from reducer redshift data', action)
   switch (action.type) {
-    case "LTNG_DATA24":
+    case "LTNG_DATA":
     // console.log('hi')
       return {
         ...state,
-        hr24: action.data
+        ...action.data
       };
 
     default:

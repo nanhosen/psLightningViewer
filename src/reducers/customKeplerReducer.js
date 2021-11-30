@@ -1,4 +1,9 @@
 import keplerGlReducer  from 'kepler.gl/reducers'
+// var DEFAULT_TIME_FORMAT = 'YYYY-MM-DDTHH:mm:ss.sssZ';
+import {DEFAULT_TIME_FORMAT} from 'kepler.gl/constants';
+// import {DEFAULT_TIME_FORMAT} from 'kepler.gl/localization';
+
+console.log('default tiem format', DEFAULT_TIME_FORMAT)
 
 const customizedKeplerGlReducer = keplerGlReducer
   .initialState({
@@ -10,6 +15,7 @@ const customizedKeplerGlReducer = keplerGlReducer
       // readOnly: false,
       // currentModal: null,
       // customize which map control button to show
+      defaultTimeFormat: 'YYYY-MM-DDTHH:mm:ss.sssZ',
       mapControls: {
         visibleLayers: {
           show: true

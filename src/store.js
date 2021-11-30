@@ -10,9 +10,10 @@ import thunk from 'redux-thunk'
 import lightningDataReducer from './reducers/lightningDataReducer'
 // import randomReducer from './reducers/randomReducer'
 
-import { appReducer } from './reducers/'
+import  appReducer  from './reducers/'
 
 const initialState = {}
+console.log('appReducer', appReducer)
 
 export const history = createBrowserHistory()
 
@@ -21,7 +22,7 @@ const reducers = (history) => combineReducers({
 
 	router: connectRouter(history),
 	keplerGl: customizedKeplerGlReducer,
-	// app: appReducer,
+	app: appReducer,
 	// latestData: latestDataReducer,
 	// redshiftData: redshiftDataReducer,
 	lightningData: lightningDataReducer

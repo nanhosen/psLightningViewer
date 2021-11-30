@@ -207,7 +207,140 @@ export const fullGaccBoundaryConfig = {
   }
 }
 
-
+export function makeLayerConfigWithName(hour){
+  const labelHour = hour ? hour : 'missing'
+  return {
+    "version": "v1",
+    "config": {
+      "visState": {
+        "filters": [],
+        "layers": [
+          {
+            "id": "p72yipa",
+            "type": "icon",
+            "config": {
+              "dataId": "24HrLtng",
+              "label": `${hour} Hour Lightning`,
+              "color": [
+                248,
+                149,
+                112
+              ],
+              "columns": {
+                "lat": "lat",
+                "lng": "lon",
+                "icon": "icon"
+              },
+              "isVisible": true,
+              "visConfig": {
+                "radius": 21.4,
+                "fixedRadius": false,
+                "opacity": 0.8,
+                "colorRange": {
+                  "name": "Custom Palette",
+                  "type": "custom",
+                  "category": "Custom",
+                  "colors": [
+                    "#002a9c",
+                    "#C22E00"
+                  ]
+                },
+                "radiusRange": [
+                  0,
+                  50
+                ]
+              },
+              "hidden": false,
+              "textLabel": []
+            },
+            "visualChannels": {
+              "colorField": {
+                "name": "sign",
+                "type": "integer"
+              },
+              "colorScale": "quantize",
+              "sizeField": null,
+              "sizeScale": "linear"
+            }
+          }
+        ],
+        "interactionConfig": {
+          "tooltip": {
+            "fieldsToShow": {
+              "24HrLtng": [
+                {
+                  "name": "cur",
+                  "format": null
+                },
+                {
+                  "name": "pol",
+                  "format": null
+                },
+                {
+                  "name": "ts",
+                  "format": null
+                },
+                {
+                  "name": "typ",
+                  "format": null
+                },
+                {
+                  "name": "eea",
+                  "format": null
+                }
+              ]
+            },
+            "compareMode": false,
+            "compareType": "absolute",
+            "enabled": true
+          },
+          "brush": {
+            "size": 0.5,
+            "enabled": false
+          },
+          "geocoder": {
+            "enabled": false
+          },
+          "coordinate": {
+            "enabled": false
+          }
+        },
+        "layerBlending": "normal",
+        "splitMaps": [],
+        "animationConfig": {
+          "currentTime": null,
+          "speed": 1
+        }
+      },
+      "mapState": {
+        "bearing": 0,
+        "dragRotate": false,
+        "latitude": 39.69082911501236,
+        "longitude": -112.08282069910514,
+        "pitch": 0,
+        "zoom": 5.192235667667807,
+        "isSplit": false
+      },
+      "mapStyle": {
+        "styleType": "custom1",
+        "topLayerGroups": {},
+        "visibleLayerGroups": {
+          "label": true,
+          "road": true,
+          "building": true,
+          "water": true,
+          "land": true
+        },
+        "threeDBuildingColor": [
+          194.6103322548211,
+          191.81688250953655,
+          185.2988331038727
+        ],
+        "mapStyles": {}
+      }
+    }
+  }        
+}
 export const fullConfigObj = {
   "version": "v1",
   "config": {

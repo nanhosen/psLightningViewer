@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios'
 // import KeplerGl from 'kepler.gl'
 import { connect, useSelector, useDispatch } from 'react-redux'
-import {
-  injectComponents,
-} from 'kepler.gl/components';
+ 
 import { getLtngData } from './actions/index.js'
 // import { getLatestData, getRedshiftDataMonthly, getRedshiftDataFireSeason } from './actions' 
 // import {addDataToMap, inputMapStyle, wrapTo, removeLayer, removeFilter, removeDataset } from 'kepler.gl/actions';
@@ -12,7 +10,21 @@ import {addDataToMap,  wrapTo } from 'kepler.gl/actions';
 import { processGeojson } from 'kepler.gl/processors';
 // import gaccBoundaries from './layers/gaccBoundariesExport'
 
-import { fullGaccBoundaryConfig, fullConfigObj} from './configs/pointLayerConfigs'
+
+import { fullGaccBoundaryConfig, fullConfigObj, makeLayerConfigWithName} from './configs/pointLayerConfigs'
+import CustomLoadDataModalFactory from './factories/CustomModalFactory'
+import CustomFloatingTimeDisplayFactory from './factories/CustomFloatingTimeDisplayFactory'
+import {
+  // MapLegendPanelFactory,
+  LoadDataModalFactory,
+	// MapPopoverFactory,
+	// TimeRangeSliderFactory,
+  injectComponents,
+  FloatingTimeDisplayFactory
+	// TimeWidgetFactory,
+	// SidePanelFactory,
+	// BottomWidgetFactory
+} from 'kepler.gl/components';
 
 
 // console.log('remove layer action', removeLayer)
@@ -38,6 +50,8 @@ const mapStylesz = [
     }
   ]; 
 const KeplerGl = injectComponents([
+	[LoadDataModalFactory, CustomLoadDataModalFactory],
+	[FloatingTimeDisplayFactory, CustomFloatingTimeDisplayFactory],
 	]);
 const KeplerMap = ({ width, height }) => {
 
@@ -46,27 +60,33 @@ const KeplerMap = ({ width, height }) => {
 
 	const dispatch = useDispatch()
 
-	useEffect(() =>{
-		(async() => {
-			await dispatch(getLtngData(24))
-		})()
-	},[])
+	useEffect(() => {
+		console.log(dataState)
+	},[dataState])
+
+	// useEffect(() =>{
+	// 	(async() => {
+	// 		await dispatch(getLtngData(24))
+	// 	})()
+	// },[])
 
 	useEffect(() => {
-		(async() => {if(dataState.lightningData.hr24){
+		(async() => {if(dataState.lightningData.fields && dataState.lightningData.rows && dataState.app?.displayHr){
+			const hourNum = dataState.app?.displayHr ? dataState.app.displayHr : 'missing'
+			const dynamicConfig = makeLayerConfigWithName(hourNum)
 								const addObj = {
 									datasets: {
 										info: {
-											label: '24 Hour Lightning Data',
-											id: '24HrLtng'
+											label: `${hourNum} Hour Lightning Data`,
+											id: `24HrLtng`
 										},
-										data: dataState.lightningData.hr24
+										data: dataState.lightningData
 									},
 									options: {
 										centerMap: false,
 										keepExistingConfig: true
 									},
-									config: fullConfigObj
+									config: dynamicConfig
 									// config: {
 								 //    "visState": {
 								 //      "filters": [],
@@ -81,47 +101,48 @@ const KeplerMap = ({ width, height }) => {
 								))
 								console.log('data added to map')
 							}})()
-	},[dataState.lightningData])
+	},[dataState.lightningData, dataState.app])
 
-	useEffect(() => {
-		// const wrapToMap1 = wrapTo('kepler-map')
-		// dispatch(wrapToMap1(addDataToMap(dispatchJson)))
-		// datasets: processGeojson(dispatchJson)
-		(async() => {
-			const gaccBoundariesRemote = await axios.get(
-				'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/National_GACC_Current/FeatureServer/0/query?where=1%3D1&outFields=*&&geometryType=esriGeometryPolyline&outSR=4326&f=geojson')
-				// 'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/National_PSA_Current/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&&geometryType=esriGeometryPolyline')
-			   // https://services3.arcgis.com/T4QMspbfLg3qTGWY/ArcGIS/rest/services/National_GACC_Current/FeatureServer/0?f=pjson
-			console.log('gaccBoundariesRemote', gaccBoundariesRemote)
 
-			// if(gaccBoundaries){
-			if(gaccBoundariesRemote && gaccBoundariesRemote.data && gaccBoundariesRemote.status == 200){
-				console.log('gacc stuff here ogoing  to pricess')
-				const addObj = {
-					datasets: {
-						info: {
-							label: 'Sample Scenegraph Ducks',
-							id: 'gacc_boundaries'
-						},
-						data: processGeojson(gaccBoundariesRemote.data)
-					},
-					options: {
-						centerMap: false,
-						keepExistingConfig: true
-					},
-					config: fullGaccBoundaryConfig
-				}
-				await dispatch(wrapTo(
-					'kepler-map',
-					addDataToMap(addObj)
-				))
-				console.log('data added to map')
-			}
-			else{
-				console.log('no jsondata')
-			}
-		})()
-	},[])
+	// useEffect(() => {
+	// 	// const wrapToMap1 = wrapTo('kepler-map')
+	// 	// dispatch(wrapToMap1(addDataToMap(dispatchJson)))
+	// 	// datasets: processGeojson(dispatchJson)
+	// 	(async() => {
+	// 		const gaccBoundariesRemote = await axios.get(
+	// 			'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/National_GACC_Current/FeatureServer/0/query?where=1%3D1&outFields=*&&geometryType=esriGeometryPolyline&outSR=4326&f=geojson')
+	// 			// 'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/National_PSA_Current/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&&geometryType=esriGeometryPolyline')
+	// 		   // https://services3.arcgis.com/T4QMspbfLg3qTGWY/ArcGIS/rest/services/National_GACC_Current/FeatureServer/0?f=pjson
+	// 		console.log('gaccBoundariesRemote', gaccBoundariesRemote)
+
+	// 		// if(gaccBoundaries){
+	// 		if(gaccBoundariesRemote && gaccBoundariesRemote.data && gaccBoundariesRemote.status == 200){
+	// 			console.log('gacc stuff here ogoing  to pricess')
+	// 			const addObj = {
+	// 				datasets: {
+	// 					info: {
+	// 						label: 'Sample Scenegraph Ducks',
+	// 						id: 'gacc_boundaries'
+	// 					},
+	// 					data: processGeojson(gaccBoundariesRemote.data)
+	// 				},
+	// 				options: {
+	// 					centerMap: false,
+	// 					keepExistingConfig: true
+	// 				},
+	// 				config: fullGaccBoundaryConfig
+	// 			}
+	// 			await dispatch(wrapTo(
+	// 				'kepler-map',
+	// 				addDataToMap(addObj)
+	// 			))
+	// 			console.log('data added to map')
+	// 		}
+	// 		else{
+	// 			console.log('no jsondata')
+	// 		}
+	// 	})()
+	// },[])
 
 	// useEffect(() => {
 	// 	console.log('dataState', dataState)
